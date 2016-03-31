@@ -203,19 +203,20 @@ func HAPISignupSubmit(w http.ResponseWriter, r *http.Request) {
 		writeError(w, err)
 		return
 	}
+        formName, formEmail, formPassword, formFID := r.FormValue("name"), r.FormValue("email"), r.FormValue("password"), r.FormValue("fid")
 
 	// validate the request parameters
-	if len(r.FormValue("Name")) == 0 {
+	if len(formName) == 0 {
 		writeError(w, errors.New("You must enter a name."))
 		return
 	}
-	if len(r.FormValue("Email")) == 0 ||
-		!strings.ContainsAny(r.FormValue("Email"), "@") ||
-		!strings.ContainsAny(r.FormValue("Email"), ".") {
+	if len(formEmail) == 0 ||
+		!strings.ContainsAny(r.FormValue("email"), "@") ||
+		!strings.ContainsAny(r.FormValue("email"), ".") {
 		writeError(w, errors.New("You must enter a valid email."))
 		return
 	}
-	if len(r.FormValue("Password")) < 8 {
+	if len(formPassword) < 8 {
 		writeError(w, errors.New("Your password must be at least 8 characters."))
 		return
 	}
@@ -228,14 +229,14 @@ func HAPISignupSubmit(w http.ResponseWriter, r *http.Request) {
 
 	// TODO format phone number for SMS interface (international format)
 	user := &dt.User{
-		Name:  r.FormValue("Name"),
-		Email: r.FormValue("Email"),
+		Name:  formName,
+		Email: formEmail,
 		// Password is hashed in user.Create()
-		Password: r.FormValue("Password"),
+		Password: formPassword,
 		Trainer:  false,
 		Admin:    false,
 	}
-	err := user.Create(db, dt.FlexIDType(2), r.FormValue("FID"))
+	err := user.Create(db, dt.FlexIDType(2), formFID)
 	if err != nil {
 		writeError(w, err)
 		return

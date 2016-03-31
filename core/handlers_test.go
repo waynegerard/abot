@@ -99,10 +99,10 @@ func TestHSignupSubmit(t *testing.T) {
 	reset(t)
 	u := "http://localhost:" + os.Getenv("PORT") + "/api/signup.json"
 	data := []byte(`{
-		"Name": "Tester",
-		"Email": "test@example.com",
-		"Password": "password",
-		"FID": "+13105555555"
+		"name": "Tester",
+		"email": "test@example.com",
+		"password": "password",
+		"fid": "+13105555555"
 	}`)
 	c, b := request("POST", u, data)
 	if c != http.StatusOK {
